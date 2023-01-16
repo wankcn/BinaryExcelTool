@@ -47,6 +47,7 @@ public class ExcelTool
                 // 生成数据结构
                 // 生成容器
                 // 生成2进制
+                // 生成Json
             }
         }
     }
