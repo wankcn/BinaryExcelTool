@@ -3,24 +3,20 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using Excel;
-using UnityEditor;
 using UnityEngine;
 
 public class ExcelTool
 {
-    /// Excel文件根目录
-    private static readonly string EXCEL_PATH = Environment.CurrentDirectory + "/Excel/";
-
-
-    [MenuItem("Tools/GenerateExcelInfo")]
-    private static void GenerateExcelInfo()
+    private ExcelTool()
     {
-        List<FileInfo> files = GetAllFiles(EXCEL_PATH);
-        GenerateExcelInfo(files);
     }
 
+    /// Excel文件根目录
+    public static readonly string EXCEL_PATH = Environment.CurrentDirectory + "/Excel/";
 
-    private static void GenerateExcelInfo(List<FileInfo> files)
+
+    /// 生成数据信息信息
+    public static void GenerateExcelInfo(List<FileInfo> files)
     {
         foreach (var fileInfo in files)
         {
@@ -59,8 +55,9 @@ public class ExcelTool
                || fullName.EndsWith(".xlsm", StringComparison.Ordinal);
     }
 
+
     /// 获得目录下所有文件包含所有子文件夹
-    private static List<FileInfo> GetAllFiles(string path)
+    public static List<FileInfo> GetAllFiles(string path)
     {
         List<FileInfo> files = new List<FileInfo>();
 
@@ -78,7 +75,7 @@ public class ExcelTool
         return files;
     }
 
-    /// 递归获取指定类型文件,包含子文件夹
+
     private static void GetAllFilesOfDir(List<FileInfo> files, string path)
     {
         try

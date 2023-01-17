@@ -8,10 +8,20 @@ using Excel;
 
 public class ExcelReadTest
 {
-    private static string EXCEL_PATH = System.Environment.CurrentDirectory + "/Excel/";
+    public void Test()
+    {
+    }
 
 
-    [MenuItem("Tools/LogDataPath")]
+    [MenuItem("Tools/GenerateExcelInfo")]
+    private static void GenerateExcelInfo()
+    {
+        List<FileInfo> files = ExcelTool.GetAllFiles(ExcelTool.EXCEL_PATH);
+        ExcelTool.GenerateExcelInfo(files);
+    }
+
+
+    [MenuItem("Tools/Test/LogDataPath")]
     private static void LogDataPath()
     {
         Debug.Log($"System.Environment.CurrentDirectory - {System.Environment.CurrentDirectory}");
@@ -20,10 +30,10 @@ public class ExcelReadTest
     }
 
 
-    [MenuItem("Tools/OpenExcel")]
+    [MenuItem("Tools/Test/OpenExcel")]
     private static void OpenExcel()
     {
-        using (FileStream fs = File.Open(EXCEL_PATH + "TestInfo.xlsx", FileMode.Open, FileAccess.Read))
+        using (FileStream fs = File.Open(ExcelTool.EXCEL_PATH + "TestInfo.xlsx", FileMode.Open, FileAccess.Read))
         {
             // 文件流获取Excel数据
             IExcelDataReader excelReader = ExcelReaderFactory.CreateOpenXmlReader(fs);
@@ -42,10 +52,10 @@ public class ExcelReadTest
         }
     }
 
-    [MenuItem("Tools/ReadExcel")]
+    [MenuItem("Tools/Test/ReadExcel")]
     private static void ReadExcel()
     {
-        using (FileStream fs = File.Open(EXCEL_PATH + "TestInfo.xlsx", FileMode.Open, FileAccess.Read))
+        using (FileStream fs = File.Open(ExcelTool.EXCEL_PATH + "TestInfo.xlsx", FileMode.Open, FileAccess.Read))
         {
             IExcelDataReader excelReader = ExcelReaderFactory.CreateOpenXmlReader(fs);
             DataSet result = excelReader.AsDataSet();
