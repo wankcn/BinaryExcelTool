@@ -17,7 +17,7 @@ public class ExcelReadTest
     private static void GenerateExcelInfo()
     {
         List<FileInfo> files = ExcelTool.GetAllFiles(ExcelTool.EXCEL_PATH);
-        ExcelTool.GenerateExcelInfo(files);
+        ExcelTool.GenerateExcelInfos(files);
     }
 
 
