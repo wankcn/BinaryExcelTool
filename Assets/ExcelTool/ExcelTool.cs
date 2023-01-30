@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using Excel;
 using UnityEditor;
@@ -199,7 +200,21 @@ public class ExcelTool
         string fileName = table.TableName.FirstCharToUpper();
 
         if (!Directory.Exists(DATA_BINARY_PATH)) Directory.CreateDirectory(DATA_BINARY_PATH);
-
+        
+        //obj序列化二进制
+        string bytesPath = DATA_BINARY_PATH + fileName + ".bytes";
+        if (File.Exists(bytesPath))
+        {
+            File.Delete(bytesPath);
+        }
+        using (FileStream fileStream = new FileStream(bytesPath, FileMode.Create))
+        {
+            BinaryFormatter binaryFormatter = new BinaryFormatter();
+            binaryFormatter.Serialize(fileStream, table);
+            Debug.Log("生成:" + bytesPath);
+        }
+        
+        
         // 创建二进制文件
         using (FileStream fs = new FileStream(DATA_BINARY_PATH + fileName, FileMode.OpenOrCreate, FileAccess.Write))
         {
