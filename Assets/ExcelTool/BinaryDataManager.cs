@@ -7,9 +7,8 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using UnityEngine;
 
-/// <summary>
-/// 2进制数据管理器
-/// </summary>
+
+/// 二进制数据管理器
 public class BinaryDataManager
 {
     private static BinaryDataManager instance = new BinaryDataManager();
@@ -25,6 +24,11 @@ public class BinaryDataManager
     {
     }
 
+    /// <summary>
+    /// 加载二进制数据到内存中
+    /// </summary>
+    /// <typeparam name="T">容器类</typeparam>
+    /// <typeparam name="K">数据结构类名</typeparam>
     public void LoadTable<T, K>()
     {
         using (FileStream fs = File.Open(ExcelTool.DATA_BINARY_PATH + typeof(K).Name, FileMode.Open, FileAccess.Read))

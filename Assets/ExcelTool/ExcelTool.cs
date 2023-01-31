@@ -153,7 +153,7 @@ public class ExcelTool
         sb.Append($"public class {className} \n" + "{\n");
         for (int i = 0; i < table.Columns.Count; i++)
         {
-            string str = $"\tprivate {rowType[i]} {rowName[i].ToString().FirstCharToLower()};\n";
+            string str = $"\tprivate {rowType[i].ToString().Trim()} {rowName[i].ToString().FirstCharToLower().Trim()};\n";
             sb.Append(str);
         }
 
@@ -161,7 +161,7 @@ public class ExcelTool
         for (int i = 0; i < table.Columns.Count; i++)
         {
             string str =
-                $"\tpublic {rowType[i]} {rowName[i].ToString().FirstCharToUpper()} => {rowName[i].ToString().FirstCharToLower()};\n";
+                $"\tpublic {rowType[i].ToString().Trim()} {rowName[i].ToString().FirstCharToUpper().Trim()} => {rowName[i].ToString().FirstCharToLower().Trim()};\n";
             sb.Append(str);
         }
 
@@ -197,23 +197,10 @@ public class ExcelTool
     /// 生成二进制数据
     private static void GenerateExcelBinary(DataTable table)
     {
+        // 文件名首字母大写
         string fileName = table.TableName.FirstCharToUpper();
 
         if (!Directory.Exists(DATA_BINARY_PATH)) Directory.CreateDirectory(DATA_BINARY_PATH);
-        
-        //obj序列化二进制
-        string bytesPath = DATA_BINARY_PATH + fileName + ".bytes";
-        if (File.Exists(bytesPath))
-        {
-            File.Delete(bytesPath);
-        }
-        using (FileStream fileStream = new FileStream(bytesPath, FileMode.Create))
-        {
-            BinaryFormatter binaryFormatter = new BinaryFormatter();
-            binaryFormatter.Serialize(fileStream, table);
-            Debug.Log("生成:" + bytesPath);
-        }
-        
         
         // 创建二进制文件
         using (FileStream fs = new FileStream(DATA_BINARY_PATH + fileName, FileMode.OpenOrCreate, FileAccess.Write))
