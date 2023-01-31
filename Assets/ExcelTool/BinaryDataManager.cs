@@ -83,9 +83,19 @@ public class BinaryDataManager
                         index += length;
                     }
                 }
+
+                object dicObject = tableType.GetField("dataDic").GetValue(tableObj);
+                //通过字典对象得到其中的 Add方法
+                MethodInfo mInfo = dicObject.GetType().GetMethod("Add");
+                //得到数据结构类对象中 指定主键字段的值
+                object keyValue = classType.GetField(pKeyName).GetValue(dataObj);
+                mInfo.Invoke(dicObject, new object[] { keyValue, dataObj });
             }
-            
-            // 读取
+
+            //把读取完的表记录下来
+            tableDic.Add(typeof(T).Name, tableObj);
+
+            fs.Close();
         }
     }
 
@@ -130,5 +140,16 @@ public class BinaryDataManager
         }
 
         return obj;
+    }
+    
+    
+    
+    /// 得到一张表的信息
+    public T GetVOData<T>() where T:class
+    {
+        string tableName = typeof(T).Name;
+        if (tableDic.ContainsKey(tableName))
+            return tableDic[tableName] as T;
+        return null;
     }
 }
