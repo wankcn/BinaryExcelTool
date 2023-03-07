@@ -153,7 +153,8 @@ public class ExcelTool
         sb.Append($"public class {className} \n" + "{\n");
         for (int i = 0; i < table.Columns.Count; i++)
         {
-            string str = $"\tprivate {rowType[i].ToString().Trim()} {rowName[i].ToString().FirstCharToLower().Trim()};\n";
+            string str =
+                $"\tprivate {rowType[i].ToString().Trim()} {rowName[i].ToString().FirstCharToLower().Trim()};\n";
             sb.Append(str);
         }
 
@@ -201,7 +202,7 @@ public class ExcelTool
         string fileName = table.TableName.FirstCharToUpper();
 
         if (!Directory.Exists(DATA_BINARY_PATH)) Directory.CreateDirectory(DATA_BINARY_PATH);
-        
+
         // 创建二进制文件
         using (FileStream fs = new FileStream(DATA_BINARY_PATH + fileName, FileMode.OpenOrCreate, FileAccess.Write))
         {
@@ -245,6 +246,45 @@ public class ExcelTool
                             fs.Write(BitConverter.GetBytes(strBytes.Length), 0, 4);
                             fs.Write(strBytes, 0, strBytes.Length);
                             break;
+                        case "List<int>":
+                            string[] strListInt = row[j].ToString().Split(',');
+                            fs.Write(BitConverter.GetBytes(strListInt.Length), 0, 4);
+                            foreach (var t in strListInt)
+                            {
+                                int tmp = int.Parse(t);
+                                fs.Write(BitConverter.GetBytes(tmp), 0, 4);
+                            }
+                            break;
+                        case "List<float>":
+                            string[] strListFloat = row[j].ToString().Split(',');
+                            fs.Write(BitConverter.GetBytes(strListFloat.Length), 0, 4);
+                            foreach (var t in strListFloat)
+                            {
+                                float tmp = float.Parse(t);
+                                fs.Write(BitConverter.GetBytes(tmp), 0, 4);
+                            }
+                            break;
+                        case "List<bool>":
+                            string[] strListBool = row[j].ToString().Split(',');
+                            fs.Write(BitConverter.GetBytes(strListBool.Length), 0, 4);
+                            foreach (var t in strListBool)
+                            {
+                                bool tmp = bool.Parse(t);
+                                fs.Write(BitConverter.GetBytes(tmp), 0, 1);
+                            }
+                            break;
+                        case "List<string>":
+                            string[] strListStr = row[j].ToString().Split(',');
+                            fs.Write(BitConverter.GetBytes(strListStr.Length), 0, 4);
+                            foreach (var t in strListStr)
+                            {
+                                byte[] tmp = Encoding.UTF8.GetBytes(t);
+                                // 先写入字符串字节数组的长度
+                                fs.Write(BitConverter.GetBytes(tmp.Length), 0, 4);
+                                fs.Write(tmp, 0, tmp.Length);
+                            }
+                            break;
+                        // TODO: 增加其他类型
                     }
                 }
             }
